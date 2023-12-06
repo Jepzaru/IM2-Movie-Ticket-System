@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Movie</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Update Movie</h1>
+        <form id="updateMovieForm" class="movie-form">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" value="{{ movie.title }}" required>
+            <br>
+            <label for="genre">Genre:</label>
+            <input type="text" id="genre" name="genre" value="{{ movie.genre }}" required>
+            <br>
+            <label for="releaseDate">Release Date:</label>
+            <input type="date" id="releaseDate" name="release_date" value="{{ movie.release_date }}" required>
+            <br>
+            <label for="capacity">Capacity:</label>
+            <input type="number" id="capacity" name="capacity" value="{{ movie.capacity }}" required>
+            <br>
+            <button type="button" onclick="updateMovie()" onsubmit="return confirm('Click Ok to save changes');">Update Movie</button>
+            <button type="button" onclick="goBack()" class="form-button back-button">Back</button>
+        </form>
+    </div>
+
+    <script>
+        function updateMovie() {
+            // Implement your update logic here
+            var title = document.getElementById('title').value;
+            var genre = document.getElementById('genre').value;
+            var releaseDate = document.getElementById('releaseDate').value;
+            var capacity = document.getElementById('capacity').value;  // Include this line
+        
+            // Check if all required fields are filled
+            if (!title || !genre || !releaseDate || !capacity) {
+                console.error('Please fill in all fields.');
+                return;
+            }
+        
+            fetch(`/movies/update/{{ movie.id }}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ title, genre, release_date: releaseDate, capacity }),  // Include capacity in the request
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Movie updated:', data);
+                // Optionally, redirect to the movies page or handle the response accordingly
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>

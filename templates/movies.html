@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movies</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Movies Ticket System</h1>
+
+        <!-- Add the search form -->
+        <form action="/movies" method="get" class="search-form">
+            <label for="search">Search Movie:</label>
+            <input type="text" id="search" name="search" placeholder="Enter movie title">
+            <button type="submit">Search</button>
+        </form>
+        <div class="log">
+            <form action="/logout" method="get">
+                <button type="submit" class="logout-btn">Logout</button>
+            </form>
+        </div>
+        <form action="/movies/create" method="get">
+            <button type="submit" class="create-btn">Create Movie</button>
+        </form>
+        <form action="{{ url_for('view_bookings') }}" method="get" class="viewbooking">
+            <button type="submit" class="viewBookings-btn">View Bookings</button>
+        </form>
+        
+        <table class="movie-table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Genre</th>
+                    <th>Release Date</th>
+                    <th>Capacity</th> 
+                    <th>Action</th>
+                    <th>Booking</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for movie in movies %}
+                    <tr>
+                        <td>{{ movie.title }}</td>
+                        <td>{{ movie.genre }}</td>
+                        <td>{{ movie.release_date }}</td>
+                        <td>{{ movie.capacity }}</td>
+                        <td>
+                            <form action="/movies/update/{{ movie.id }}" method="get">
+                                <button class="update-btn" type="submit">Update</button>
+                            </form>
+                            <form action="/movies/delete/{{ movie.id }}" method="post" onsubmit="return confirm('Are you sure you want to delete this movie?');">
+                                <button class="delete-btn" type="submit">Delete</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form action="/movies/{{ movie.id }}/book" method="get">
+                                <button class="book-btn" type="submit">Book Movie</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

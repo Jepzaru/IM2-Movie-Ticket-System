@@ -1,0 +1,38 @@
+<!-- delete_movie.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Movie</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Delete Movie</h1>
+        <p>Are you sure you want to delete the movie "{{ movie.title }}"?</p>
+        <form id="deleteMovieForm">
+            <button type="button" onclick="deleteMovie()">Delete Movie</button>
+        </form>
+    </div>
+
+    <script>
+        function deleteMovie() {
+            // Implement your deletion logic here
+
+            fetch('/movies/{{ movie.id }}/delete', {
+                method: 'POST',
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Movie deleted:', data);
+                // Optionally, redirect to the movies page or handle the response accordingly
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>

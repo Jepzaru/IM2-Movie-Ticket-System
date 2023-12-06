@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h1 class="main-title">Movie Details</h1>
+    
+    <h2 class="section-title">Movie Information</h2>
+    {% if movie %}
+        <p class="movie-info">Title: {{ movie.title }}</p>
+        <p class="movie-info">Genre: {{ movie.genre }}</p>
+        <p class="movie-info">Release Date: {{ movie.release_date }}</p>
+    {% else %}
+        <p class="movie-info">Movie not found</p>
+    {% endif %}
+
+    <h2 class="section-title">Book Tickets</h2>
+    <form id="bookTicketsForm" class="booking-form" action="{{ url_for('book_movie', id=movie.id) }}" method="post">
+        <label for="bookerName" class="form-label">Booker's Name:</label>
+        <input type="text" id="bookerName" name="booker_name" class="form-input" required>
+        <br>
+        <label for="numTickets" class="form-label">Number of Tickets:</label>
+        <input type="number" id="numTickets" name="num_tickets" class="form-input" required>
+        <br>
+        <button type="submit" class="form-button">Book Tickets</button>
+        <button type="button" onclick="goBack()" class="form-button back-button">Back</button>
+    </form>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>
