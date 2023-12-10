@@ -11,6 +11,12 @@
     <div class="container">
         <h1>View Bookings</h1>
 
+        <form action="/view_bookings" method="get" class="search-form">
+            <label for="search">Search Booker</label>
+            <input type="text" id="search" name="search" placeholder="Enter booker's name">
+            <button type="submit">Search</button>
+        </form>
+
         <button type="button" onclick="goBack()" class="form-button back-button">Back to Movies</button>
 
         <table class="booking-table">

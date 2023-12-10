@@ -3,7 +3,7 @@ from flask_mysqldb import MySQL
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user
 from database import set_database, fetchone, fetchall
 from movie import create_movie, get_all_movies, get_movie_by_id, update_movie, delete_movie
-from booking import create_booking, cancel_booking
+from booking import create_booking, cancel_booking, calculate_total_price
 from users import create_user
 
 app = Flask(__name__)
@@ -120,18 +120,28 @@ def book_movie(id):
         booker_name = request.form.get("booker_name")
         num_tickets = request.form.get("num_tickets")
 
-        
-        create_booking(movie_id, booker_name, num_tickets)
+        # Retrieve the movie price from the movie details page
+        movie = get_movie_by_id(movie_id)
+        if movie:
+            movie_price = movie.get("price")
+            
+            # Calculate the total price
+            total_price = calculate_total_price(num_tickets, movie_price)
+            
+            # Create the booking
+            create_booking(movie_id, booker_name, num_tickets, total_price)
 
-       
-        return redirect(url_for('booking_confirmation', movie_id=movie_id, booker_name=booker_name, num_tickets=num_tickets))
+            return redirect(url_for('booking_confirmation', movie_id=movie_id, booker_name=booker_name, num_tickets=num_tickets,total_price=total_price))
+        else:
+            flash("Movie not found", "error")
+
     else:
         movie = get_movie_by_id(id)
         return render_template("movie_details.html", movie=movie)
 
-@app.route("/booking_confirmation/<movie_id>/<booker_name>/<num_tickets>", methods=["GET"])
-def booking_confirmation(movie_id, booker_name, num_tickets):
-    return render_template("booking_confirmation.html", movie_id=movie_id, booker_name=booker_name, num_tickets=num_tickets)
+@app.route("/booking_confirmation/<movie_id>/<booker_name>/<num_tickets>/<total_price>", methods=["GET"])
+def booking_confirmation(movie_id, booker_name, num_tickets, total_price):
+    return render_template("booking_confirmation.html", movie_id=movie_id, booker_name=booker_name, num_tickets=num_tickets, total_price=total_price)
 
 
 @app.route("/movies/create", methods=["GET"])
@@ -158,8 +168,12 @@ def delete_movie_handler(id):
 @app.route("/view_bookings", methods=["GET"])
 @login_required
 def view_bookings():
+    search_query = request.args.get("search")
     
-    bookings = fetchall("SELECT * FROM view_bookings")
+    if search_query:
+        bookings = fetchall("SELECT * FROM view_bookings WHERE booker_name LIKE %s", (f"%{search_query}%",))
+    else:
+        bookings = fetchall("SELECT * FROM view_bookings")
     
     return render_template("view_bookings.html", bookings=bookings)
 

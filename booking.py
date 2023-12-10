@@ -1,9 +1,8 @@
-
 from database import fetchone, execute
 
-def create_booking(movie_id, booker_name, num_tickets):
-    query = "INSERT INTO bookings (movie_id, booker_name, num_tickets) VALUES (%s, %s, %s)"
-    values = (movie_id, booker_name, num_tickets)
+def create_booking(movie_id, booker_name, num_tickets, total_price):
+    query = "INSERT INTO bookings (movie_id, booker_name, num_tickets, total_price) VALUES (%s, %s, %s, %s)"
+    values = (movie_id, booker_name, num_tickets, total_price)
     
     try:
         fetchone(query, values)
@@ -39,3 +38,15 @@ def cancel_booking(booking_id):
         return True
     else:
         return False
+
+def calculate_total_price(num_tickets, price):
+    try:
+        num_tickets = int(num_tickets)
+        if price is not None:
+            movie_price = float(price)
+            total_price = num_tickets * movie_price
+            return total_price
+        else:
+            return None
+    except ValueError:
+        return None

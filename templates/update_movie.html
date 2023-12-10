@@ -23,6 +23,9 @@
             <label for="capacity">Capacity:</label>
             <input type="number" id="capacity" name="capacity" value="{{ movie.capacity }}" required>
             <br>
+            <label for="price">Price:</label>
+            <input type="number" id="price" name="price" step="0.01" value="{{ movie.price }}" required>
+            <br>
             <button type="button" onclick="updateMovie()" onsubmit="return confirm('Click Ok to save changes');">Update Movie</button>
             <button type="button" onclick="goBack()" class="form-button back-button">Back</button>
         </form>
@@ -30,14 +33,13 @@
 
     <script>
         function updateMovie() {
-            // Implement your update logic here
             var title = document.getElementById('title').value;
             var genre = document.getElementById('genre').value;
             var releaseDate = document.getElementById('releaseDate').value;
-            var capacity = document.getElementById('capacity').value;  // Include this line
+            var capacity = document.getElementById('capacity').value;
+            var price = document.getElementById('price').value;  // Include this line
         
-            // Check if all required fields are filled
-            if (!title || !genre || !releaseDate || !capacity) {
+            if (!title || !genre || !releaseDate || !capacity || !price) {
                 console.error('Please fill in all fields.');
                 return;
             }
@@ -47,7 +49,7 @@
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ title, genre, release_date: releaseDate, capacity }),  // Include capacity in the request
+                body: JSON.stringify({ title, genre, release_date: releaseDate, capacity, price }),  // Include price in the request
             })
             .then(response => response.json())
             .then(data => {
@@ -58,6 +60,7 @@
                 console.error('Error:', error);
             });
         }
+
         function goBack() {
             window.history.back();
         }

@@ -24,6 +24,9 @@
             <label for="capacity">Capacity:</label>
             <input type="number" id="capacity" name="capacity" required>
             <br>
+            <label for="price">Price:</label>
+            <input type="number" id="price" name="price" step="0.01" required>
+            <br>
             <button type="button" onclick="createMovie()">Create Movie</button>
             <button type="button" onclick="goBack()" class="form-button back-button">Back</button>
         </form>
@@ -35,13 +38,14 @@
             var genre = document.getElementById('genre').value;
             var releaseDate = document.getElementById('releaseDate').value;
             var capacity = document.getElementById('capacity').value;
+            var price = document.getElementById('price').value;
 
             fetch('/movies', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ title: title, genre: genre, release_date: releaseDate, capacity: capacity }),
+                body: JSON.stringify({ title: title, genre: genre, release_date: releaseDate, capacity: capacity, price: price }),
             })
             .then(response => response.json())
             .then(data => {

@@ -6,9 +6,10 @@ def create_movie(data):
     genre = data.get("genre")
     release_date = data.get("release_date")
     capacity = data.get("capacity")
+    price = data.get("price")
 
-    query = "INSERT INTO movies (title, genre, release_date, capacity) VALUES (%s, %s, %s, %s)"
-    values = (title, genre, release_date, capacity)
+    query = "INSERT INTO movies (title, genre, release_date, capacity, price) VALUES (%s, %s, %s, %s, %s)"
+    values = (title, genre, release_date, capacity, price)
     fetchone(query, values)
 
 def get_movie_by_id_with_capacity(movie_id):
@@ -29,8 +30,8 @@ def get_movie_by_id(movie_id):
 def update_movie(movie_id, data):
     print(f"Updating movie with ID: {movie_id}")
     print(f"Data received: {data}")
-    execute("UPDATE movies SET title=%s, genre=%s, release_date=%s, capacity=%s WHERE id=%s",
-            (data["title"], data["genre"], data["release_date"], data["capacity"], movie_id))
+    execute("UPDATE movies SET title=%s, genre=%s, release_date=%s, capacity=%s, price=%s  WHERE id=%s",
+            (data["title"], data["genre"], data["release_date"], data["capacity"], data["price"], movie_id))
 
 def delete_movie(movie_id):
     execute("DELETE FROM movies WHERE id=%s", (movie_id,))
