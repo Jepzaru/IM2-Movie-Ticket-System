@@ -15,7 +15,7 @@
         <p class="movie-info">Title: {{ movie.title }}</p>
         <p class="movie-info">Genre: {{ movie.genre }}</p>
         <p class="movie-info">Release Date: {{ movie.release_date }}</p>
-        <!-- Remove the display of the movie price -->
+        <p class="movie-info">Price: ₱ {{ movie.price }}</p>
     {% else %}
         <p class="movie-info">Movie not found</p>
     {% endif %}
@@ -31,10 +31,6 @@
         <button type="submit" class="form-button">Book Tickets</button>
         <button type="button" onclick="goBack()" class="form-button back-button">Back</button>
     </form>
-
-    <!-- Display the total price here, you can use a placeholder or leave it empty initially -->
-    <h2 class="section-title">Total Price</h2>
-    <p id="totalPricePlaceholder"></p>
 
     <script>
         function goBack() {
