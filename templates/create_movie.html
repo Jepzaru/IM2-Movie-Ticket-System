@@ -1,64 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Create Movie</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: #f8f9fa;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .container {
+        text-align: center;
+        max-width: 400px;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+      }
+
+      h1 {
+        color: #007bff;
+      }
+
+      .movie-form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      label {
+        margin: 10px 0;
+        font-size: 16px;
+        color: #343a40;
+      }
+
+      input {
+        padding: 10px;
+        font-size: 14px;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        width: 100%;
+        margin-bottom: 15px;
+      }
+
+      button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+        margin-bottom: 10px;
+      }
+
+      button.back-button {
+        background-color: #6c757d;
+        margin-top: 10px;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+
+      .popup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 15px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+      }
+
+      #popupMessage {
+        color: green;
+      }
+    </style>
+  </head>
+  <body>
     <div class="container">
-        <h1>Create Movie</h1>
-
-        <form id="createMovieForm" class="movie-form">
-            <label for="title">Title:</label>
-            <input type="text" id="title" name="title" required>
-            <br>
-            <label for="genre">Genre:</label>
-            <input type="text" id="genre" name="genre" required>
-            <br>
-            <label for="releaseDate">Release Date:</label>
-            <input type="date" id="releaseDate" name="release_date" required>
-            <br>
-            <label for="capacity">Capacity:</label>
-            <input type="number" id="capacity" name="capacity" required>
-            <br>
-            <label for="price">Price:</label>
-            <input type="number" id="price" name="price" step="0.01" required>
-            <br>
-            <button type="button" onclick="createMovie()">Create Movie</button>
-            <button type="button" onclick="goBack()" class="form-button back-button">Back</button>
-        </form>
+      <h1>Create Movie</h1>
+      <form id="createMovieForm" class="movie-form">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" required />
+        <label for="genre">Genre:</label>
+        <input type="text" id="genre" name="genre" required />
+        <label for="releaseDate">Release Date:</label>
+        <input type="date" id="releaseDate" name="release_date" required />
+        <label for="capacity">Capacity:</label>
+        <input type="number" id="capacity" name="capacity" required />
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price" step="0.01" required />
+        <button type="button" onclick="createMovie()">Create Movie</button>
+        <button
+          type="button"
+          onclick="goBack()"
+          class="form-button back-button"
+        >
+          Back
+        </button>
+      </form>
     </div>
-
+    <div id="popup" class="popup">
+      <span id="popupMessage"></span>
+    </div>
     <script>
-        function createMovie() {
-            var title = document.getElementById('title').value;
-            var genre = document.getElementById('genre').value;
-            var releaseDate = document.getElementById('releaseDate').value;
-            var capacity = document.getElementById('capacity').value;
-            var price = document.getElementById('price').value;
+      function createMovie() {
+        var title = document.getElementById("title").value;
+        var genre = document.getElementById("genre").value;
+        var releaseDate = document.getElementById("releaseDate").value;
+        var capacity = document.getElementById("capacity").value;
+        var price = document.getElementById("price").value;
 
-            fetch('/movies', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ title: title, genre: genre, release_date: releaseDate, capacity: capacity, price: price }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Handle the response, e.g., show a success message
-                console.log('Movie created:', data);
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-        }
-        function goBack() {
-            window.history.back();
-        }
+        fetch("/movies", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title: title,
+            genre: genre,
+            release_date: releaseDate,
+            capacity: capacity,
+            price: price,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            // Handle the response, e.g., show a success message
+            alert(`${data.title} created successfully`);
+            console.log("Movie created:", data);
+            showPopup(`${data.title} created successfully`); // Add this line
+          })
+
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+
+      function showPopup(message) {
+        var popup = document.getElementById("popup");
+        var popupMessage = document.getElementById("popupMessage");
+
+        popupMessage.innerText = message;
+        popup.style.display = "block";
+
+        // Hide the popup after a few seconds
+        setTimeout(function () {
+          popup.style.display = "none";
+        }, 3000); // Adjust the timeout as needed
+      }
+      function goBack() {
+        window.history.back();
+      }
     </script>
-</body>
+  </body>
 </html>

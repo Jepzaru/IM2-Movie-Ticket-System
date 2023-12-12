@@ -1,69 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Update Movie</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: #f8f9fa;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+
+      .container {
+        text-align: center;
+        max-width: 400px;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+      }
+
+      h1 {
+        color: #007bff;
+      }
+
+      .movie-form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      label {
+        margin: 10px 0;
+        font-size: 16px;
+        color: #343a40;
+      }
+
+      input {
+        padding: 10px;
+        font-size: 14px;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        width: 100%;
+        margin-bottom: 15px;
+      }
+
+      button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+        margin-bottom: 10px;
+      }
+
+      button.back-button {
+        background-color: #6c757d;
+        margin-top: 10px;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
     <div class="container">
-        <h1>Update Movie</h1>
-        <form id="updateMovieForm" class="movie-form">
-            <label for="title">Title:</label>
-            <input type="text" id="title" name="title" value="{{ movie.title }}" required>
-            <br>
-            <label for="genre">Genre:</label>
-            <input type="text" id="genre" name="genre" value="{{ movie.genre }}" required>
-            <br>
-            <label for="releaseDate">Release Date:</label>
-            <input type="date" id="releaseDate" name="release_date" value="{{ movie.release_date }}" required>
-            <br>
-            <label for="capacity">Capacity:</label>
-            <input type="number" id="capacity" name="capacity" value="{{ movie.capacity }}" required>
-            <br>
-            <label for="price">Price:</label>
-            <input type="number" id="price" name="price" step="0.01" value="{{ movie.price }}" required>
-            <br>
-            <button type="button" onclick="updateMovie()" onsubmit="return confirm('Click Ok to save changes');">Update Movie</button>
-            <button type="button" onclick="goBack()" class="form-button back-button">Back</button>
-        </form>
+      <h1>Update Movie</h1>
+      <form id="updateMovieForm" class="movie-form">
+        <label for="title">Title:</label>
+        <input
+          type="text"
+          id="title"
+          name="title"
+          value="{{ movie.title }}"
+          required
+        />
+        <label for="genre">Genre:</label>
+        <input
+          type="text"
+          id="genre"
+          name="genre"
+          value="{{ movie.genre }}"
+          required
+        />
+        <label for="releaseDate">Release Date:</label>
+        <input
+          type="date"
+          id="releaseDate"
+          name="release_date"
+          value="{{ movie.release_date }}"
+          required
+        />
+        <label for="capacity">Capacity:</label>
+        <input
+          type="number"
+          id="capacity"
+          name="capacity"
+          value="{{ movie.capacity }}"
+          required
+        />
+        <label for="price">Price:</label>
+        <input
+          type="number"
+          id="price"
+          name="price"
+          step="0.01"
+          value="{{ movie.price }}"
+          required
+        />
+        <button type="button" onclick="updateMovie()">Update Movie</button>
+        <button type="button" onclick="goBack()" class="back-button">
+          Back
+        </button>
+      </form>
     </div>
 
     <script>
-        function updateMovie() {
-            var title = document.getElementById('title').value;
-            var genre = document.getElementById('genre').value;
-            var releaseDate = document.getElementById('releaseDate').value;
-            var capacity = document.getElementById('capacity').value;
-            var price = document.getElementById('price').value;  // Include this line
-        
-            if (!title || !genre || !releaseDate || !capacity || !price) {
-                console.error('Please fill in all fields.');
-                return;
-            }
-        
-            fetch(`/movies/update/{{ movie.id }}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ title, genre, release_date: releaseDate, capacity, price }),  // Include price in the request
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Movie updated:', data);
-                // Optionally, redirect to the movies page or handle the response accordingly
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
+      function updateMovie() {
+        var title = document.getElementById("title").value;
+        var genre = document.getElementById("genre").value;
+        var releaseDate = document.getElementById("releaseDate").value;
+        var capacity = document.getElementById("capacity").value;
+        var price = document.getElementById("price").value;
+
+        if (!title || !genre || !releaseDate || !capacity || !price) {
+          console.error("Please fill in all fields.");
+          return;
         }
 
-        function goBack() {
-            window.history.back();
-        }
+        fetch(`/movies/update/{{ movie.id }}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title,
+            genre,
+            release_date: releaseDate,
+            capacity,
+            price,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("Movie updated:", data);
+            // Optionally, redirect to the movies page or handle the response accordingly
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+
+      function goBack() {
+        window.history.back();
+      }
     </script>
-</body>
+  </body>
 </html>

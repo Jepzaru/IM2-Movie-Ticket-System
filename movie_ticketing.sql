@@ -1,4 +1,3 @@
-USE movie_ticketing;
 
 
 CREATE TABLE `users` (
@@ -131,3 +130,28 @@ CREATE VIEW movies_with_capacity AS
         bookings b ON m.id = b.movie_id
     GROUP BY
         m.id;
+
+        DELIMITER //
+
+CREATE PROCEDURE create_booking(
+    IN p_movie_id INT,
+    IN p_booker_name VARCHAR(255),
+    IN p_num_tickets INT
+)
+BEGIN
+    DECLARE v_total_price DECIMAL(10, 2);
+
+    -- Fetch the movie price
+    SELECT price INTO v_total_price FROM movies WHERE id = p_movie_id;
+
+    -- Calculate the total price
+    SET v_total_price = p_num_tickets * v_total_price;
+
+    -- Call the create_booking function from booking.py
+    CALL create_booking(p_movie_id, p_booker_name, p_num_tickets, v_total_price);
+
+    -- Update the movie capacity
+    UPDATE movies SET capacity = capacity - p_num_tickets WHERE id = p_movie_id;
+END //
+
+DELIMITER ;
