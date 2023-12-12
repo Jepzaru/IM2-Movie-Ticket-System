@@ -1,27 +1,33 @@
 
 
 CREATE TABLE `users` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,    
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
-CREATE TABLE `movies` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) NOT NULL DEFAULT '',
-  `genre` varchar(255) NOT NULL DEFAULT '',
-  `release_date` date NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB;
 
-CREATE TABLE `bookings` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` int NOT NULL,
-  `movie_id` int NOT NULL,
-  `num_tickets` int NOT NULL,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`),
-  FOREIGN KEY (`movie_id`) REFERENCES `movies`(`id`)
-) ENGINE=InnoDB;
+CREATE TABLE movies (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    genre VARCHAR(255) NOT NULL,
+    release_date DATE NOT NULL,
+    capacity INT NOT NULL,
+    price DECIMAL(10, 2) NOT NULL
+);
+
+CREATE TABLE bookings (
+    booking_id INT AUTO_INCREMENT PRIMARY KEY,
+    movie_id INT NOT NULL,
+    booker_name VARCHAR(255) NOT NULL,
+    num_tickets INT NOT NULL,
+    total_price DECIMAL(10, 2) NOT NULL,
+    booking_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE CASCADE
+);
 
 DELIMITER //
 
@@ -111,11 +117,20 @@ BEGIN
 END //
 
 DELIMITER ;
--- view bookings
+
 CREATE VIEW view_bookings AS
-    SELECT bookings.*, movies.title AS movie_title
-    FROM bookings
-    JOIN movies ON bookings.movie_id = movies.id;
+    SELECT 
+        b.booking_id,
+        b.movie_id,
+        b.booker_name,
+        b.num_tickets,
+        b.total_price,
+        b.booking_date,
+        m.title AS movie_title
+    FROM bookings b
+    JOIN movies m ON b.movie_id = m.id;
+
+        DELIMITER //
 
 CREATE VIEW movies_with_capacity AS
     SELECT
@@ -130,28 +145,3 @@ CREATE VIEW movies_with_capacity AS
         bookings b ON m.id = b.movie_id
     GROUP BY
         m.id;
-
-        DELIMITER //
-
-CREATE PROCEDURE create_booking(
-    IN p_movie_id INT,
-    IN p_booker_name VARCHAR(255),
-    IN p_num_tickets INT
-)
-BEGIN
-    DECLARE v_total_price DECIMAL(10, 2);
-
-    -- Fetch the movie price
-    SELECT price INTO v_total_price FROM movies WHERE id = p_movie_id;
-
-    -- Calculate the total price
-    SET v_total_price = p_num_tickets * v_total_price;
-
-    -- Call the create_booking function from booking.py
-    CALL create_booking(p_movie_id, p_booker_name, p_num_tickets, v_total_price);
-
-    -- Update the movie capacity
-    UPDATE movies SET capacity = capacity - p_num_tickets WHERE id = p_movie_id;
-END //
-
-DELIMITER ;
