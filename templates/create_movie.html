@@ -147,12 +147,10 @@
         })
           .then((response) => response.json())
           .then((data) => {
-            // Handle the response, e.g., show a success message
             alert(`${data.title} created successfully`);
             console.log("Movie created:", data);
-            showPopup(`${data.title} created successfully`); // Add this line
+            showPopup(`${data.title} created successfully`);
           })
-
           .catch((error) => {
             console.error("Error:", error);
           });
@@ -162,14 +160,17 @@
         var popup = document.getElementById("popup");
         var popupMessage = document.getElementById("popupMessage");
 
-        popupMessage.innerText = message;
+        // Display the message and a "Close" button
+        popupMessage.innerHTML =
+          message + '<br/><button onclick="closePopup()">Close</button>';
         popup.style.display = "block";
-
-        // Hide the popup after a few seconds
-        setTimeout(function () {
-          popup.style.display = "none";
-        }, 3000); // Adjust the timeout as needed
       }
+
+      function closePopup() {
+        var popup = document.getElementById("popup");
+        popup.style.display = "none";
+      }
+
       function goBack() {
         window.history.back();
       }

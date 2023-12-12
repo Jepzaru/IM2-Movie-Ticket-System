@@ -1,41 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Movie Details</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+      }
+
+      .main-title {
+        color: #3498db;
+        font-size: 32px;
+        margin-bottom: 20px;
+      }
+
+      .section-title {
+        color: #555;
+        font-size: 24px;
+        margin-top: 20px;
+        margin-bottom: 10px;
+      }
+
+      .movie-info {
+        color: #333;
+        font-size: 18px;
+        margin-bottom: 10px;
+      }
+
+      .form-label {
+        color: #333;
+        font-size: 16px;
+        margin-bottom: 8px;
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-bottom: 16px;
+        box-sizing: border-box;
+        transition: border-color 0.3s ease;
+      }
+
+      .form-input:focus {
+        border-color: #3498db;
+        outline: none;
+      }
+
+      .form-button {
+        background-color: #3498db;
+        color: #fff;
+        text-decoration: none;
+        padding: 12px 20px;
+        font-size: 16px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+        cursor: pointer;
+      }
+
+      .form-button:hover {
+        background-color: #2980b9;
+      }
+
+      .back-button {
+        background-color: #ddd;
+        color: #333;
+        margin-right: 10px;
+      }
+
+      .back-button:hover {
+        background-color: #ccc;
+      }
+    </style>
+  </head>
+  <body>
     <h1 class="main-title">Movie Details</h1>
-    
+
     <h2 class="section-title">Movie Information</h2>
     {% if movie %}
-        <p class="movie-info">Title: {{ movie.title }}</p>
-        <p class="movie-info">Genre: {{ movie.genre }}</p>
-        <p class="movie-info">Release Date: {{ movie.release_date }}</p>
-        <p class="movie-info">Price: {{ movie.price }}</p>
+    <p class="movie-info"><strong>Title:</strong> {{ movie.title }}</p>
+    <p class="movie-info"><strong>Genre:</strong> {{ movie.genre }}</p>
+    <p class="movie-info">
+      <strong>Release Date:</strong> {{ movie.release_date }}
+    </p>
+    <p class="movie-info"><strong>Price:</strong> {{ movie.price }}</p>
     {% else %}
-        <p class="movie-info">Movie not found</p>
+    <p class="movie-info">Movie not found</p>
     {% endif %}
 
     <h2 class="section-title">Book Tickets</h2>
-    <form id="bookTicketsForm" class="booking-form" action="{{ url_for('book_movie', id=movie.id) }}" method="post">
-        <label for="bookerName" class="form-label">Booker's Name:</label>
-        <input type="text" id="bookerName" name="booker_name" class="form-input" required>
-        <br>
-        <label for="numTickets" class="form-label">Number of Tickets:</label>
-        <input type="number" id="numTickets" name="num_tickets" class="form-input" required>
-        <br>
-        <button type="submit" class="form-button">Book Tickets</button>
-        <button type="button" onclick="goBack()" class="form-button back-button">Back</button>
+    <form
+      id="bookTicketsForm"
+      class="booking-form"
+      action="{{ url_for('book_movie', id=movie.id) }}"
+      method="post"
+    >
+      <label for="bookerName" class="form-label">Booker's Name:</label>
+      <input
+        type="text"
+        id="bookerName"
+        name="booker_name"
+        class="form-input"
+        required
+      />
+      <br />
+      <label for="numTickets" class="form-label">Number of Tickets:</label>
+      <input
+        type="number"
+        id="numTickets"
+        name="num_tickets"
+        class="form-input"
+        required
+      />
+      <br />
+      <button type="submit" class="form-button">Book Tickets</button>
+      <a href="{{ url_for('movies') }}" class="form-button back-button">Back</a>
     </form>
-
-    <script>
-        function goBack() {
-            window.history.back();
-        }
-    </script>
-</body>
+  </body>
 </html>
